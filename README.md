@@ -64,6 +64,56 @@ A noter que les inclusions de fichiers ne peuvent se faire que dans le code prin
 RSCRIPT peut utiliser des plugins lors de la génération du code final. Un plugin est un script "outil" appelé par RSCRIPT et qui a sa fonction propre. Tous les plugins se trouvent dans le dossier plugins. Pour utiliser un plugin, vous devrez utiliser le tag "#plugin". Voici un exemple :
 
 ```
-#plugin img2char "source": "./graphics/sprites.png", "m": "thomson", "ns": 0,"cl": "yes", "o": "./inc/SPRITES.rscript"
+#plugin img2char source=./graphics/sprites.png m=thomson ns=0 cl=yes o=./inc/SPRITES.rscript
 ```
 Ce code indique à RSCRIPT d'exécuter le plugin "img2char" (qui transforme une image en code BASIC), en lui passant les paramètres qui suivent...
+
+<b>Référencement des variables et constantes</b><br>
+Comme indiqué dans le paragraphe sur la compression de code, RSCRIPT peut renommer les variables et constantes afin de réduire la taille de leur nom. Il faut référencer les noms de ces variables et constantes qui devront être renommer. C'est très simple, voici un exemple :
+```
+#var NOM_DU_JOUEUR1$
+#var PRENOM_DU_JOUEUR1$
+
+!NOM_DU_JOUEUR1$="Toto":!PRENOM_DU_JOUEUR1$="Titi"
+```
+Ce code référence 2 variables "NOM_DU_JOUEUR1$", "PRENOM_DU_JOUEUR1$" qui sont utilisées dans notre code en les précédent de "!". Lors de la transpilation, RSCRIPT les renommera en quelque chose comme cela :
+```
+!A$="Toto":!B$="Titi"
+```
+
+Pour les constantes, le fonctionnement est similaire à l'exception que vous ne pourrez pas modifier leur valeur. Voici un exemple : 
+```
+#const FRANCE$="fr"
+#const ENGLAND$="uk"
+
+Print !FRANCE$ : Print !ENGLAND$
+```
+Lors de la transpilation, RSCRIPT remplacera le code comme cela :
+```
+Print "fr" : Print "uk"
+```
+A NOTER : Vous remarquerez que les noms des variables et constantes respectent le typage du BASIC. Si la valeur d'une variable est alphanumérique, son nom doit se terminer par "$".
+
+
+<b>Liste des tags</b><br>
+RSCRIPT comprends un certain nombre de tags. Un tag est une directive que doit appliquer RSCRIPT lors de la transpilation du code. Vous avez pû en voir quelques unes dans les paragraphes précédents. En voici la liste complète :
+
+- #plugin:
+    Script outil à utiliser lors de la transpilation.
+    Syntaxe : #plugin <nom du plugin> <liste des arguments>
+
+- #include:
+    Inclusion de code
+    Syntaxe : #include path1.path2.file_without_extension
+
+- #label:
+    Insertion d'une étiquette
+    Syntaxe : #label <nom de l'étiquette>
+
+- #var:
+    Référencement d'une variable.
+    Syntaxe : #var <nom_de_la_variable>
+
+- #const:
+    Référencement d'une constante
+    Syntaxe : #const <nom de la constante>=<valeur>
