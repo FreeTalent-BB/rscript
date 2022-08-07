@@ -13,7 +13,7 @@ Comme indiqué ci-dessus, RSCRIPT prend en charge la numérotation des lignes. C
 ```
 #label mon_etiquette
 ```
-<b>#label<b> est un tag qui indique à RSCRIPT que l'on veut <b>référencer la ligne tout de suite en dessous.</b>. RSCRIPT peut gérer plusieurs tags. Vous verrez plus bas dans cette page.
+<b>#label</b> est un tag qui indique à RSCRIPT que l'on veut <b>référencer la ligne tout de suite en dessous.</b>. RSCRIPT peut gérer plusieurs tags. Vous verrez plus bas dans cette page.
 
 Pour faire un saut vers l'étiquette créée, il suffit de faire :
 ```
@@ -41,3 +41,21 @@ RSCRIPT peut ainsi compresser le code BASIC final afin de réduire sa taille et 
 - Remplacer les commandes "CHR$(N)" par leur équivalent texte (quand c'est possible)
 - Remplacer les concaténations de textes qui suivent une commande "PRINT" ( par exemple: Print "Bonjour " + A$, deviendra ?"Bonjour "A$ )
 
+<b>Inclusion de code</b><br>
+A l'époque, un programme BASIC devait être écrit dans un seul et même fichier. Ce qui, sur des longs programmes, devenait vite un casse-tête pour debugger ou corriger un morceau du code. 
+Morceller son programme en plusieurs fichiers permet un confort de lecture et de développement. C'est une pratique standard utilisée avec les langages modernes. Chaque morceau est une partie du programme, Par exemple, pour un programme de jeu on pourrait avoir :
+
+- Un fichier de code pour l'écran de titre
+- Un fichier de code pour les graphismes
+- Un fichier de code pour la gestion du jeu
+- Un fichier de code pour les sons et musiques
+
+RSCRIPT peut faire ce type d'inclusion. Voici un exemple :
+
+```
+#include inc.gfx.sprites
+```
+
+Le tag <b>"#include"</b> indique à RSCRIPT qu'il doit intégrer le code contenu dans le fichier "inc/gfx/sprites.rscript" à partir de la ligne actuelle. Vous remarquerez que le chemin du fichier fourni avec le tag remplace les séparateurs de fichiers par ".". L'extension ".rscript" n'est pas non plus indiquée, car RSCRIPT suppose qu'il s'agit d'un fichier ".rscript", car il ne peut qu'insérer que ce type de fichier. 
+
+A noter que les inclusions de fichiers ne peuvent se faire que dans le code principal. Un fichier inclus ne peut pas contenir d'inclusion de fichier.
