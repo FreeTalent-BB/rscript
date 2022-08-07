@@ -64,7 +64,7 @@ export { _rscript as rscript };
 var myArgs = [];
 if( basename( process.argv[ 1 ] ).toLowerCase() == 'rscript.js' )
 {
-	console.log( 'RSCRIPT v1.0-4 by Baptiste Bideaux' );
+	console.log( 'RSCRIPT v1.0-5 by Baptiste Bideaux' );
 	console.log( '----------------------------------' ); 
 	console.log( '' );
 

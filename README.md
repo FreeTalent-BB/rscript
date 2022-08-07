@@ -59,3 +59,11 @@ RSCRIPT peut faire ce type d'inclusion. Voici un exemple :
 Le tag <b>"#include"</b> indique à RSCRIPT qu'il doit intégrer le code contenu dans le fichier "inc/gfx/sprites.rscript" à partir de la ligne actuelle. Vous remarquerez que le chemin du fichier fourni avec le tag remplace les séparateurs de fichiers par ".". L'extension ".rscript" n'est pas non plus indiquée, car RSCRIPT suppose qu'il s'agit d'un fichier ".rscript", car il ne peut qu'insérer que ce type de fichier. 
 
 A noter que les inclusions de fichiers ne peuvent se faire que dans le code principal. Un fichier inclus ne peut pas contenir d'inclusion de fichier.
+
+<b>Utilisation de plugins</b><br>
+RSCRIPT peut utiliser des plugins lors de la génération du code final. Un plugin est un script "outil" appelé par RSCRIPT et qui a sa fonction propre. Tous les plugins se trouvent dans le dossier plugins. Pour utiliser un plugin, vous devrez utiliser le tag "#plugin". Voici un exemple :
+
+```
+#plugin img2char "source": "./graphics/sprites.png", "m": "thomson", "ns": 0,"cl": "yes", "o": "./inc/SPRITES.rscript"
+```
+Ce code indique à RSCRIPT d'exécuter le plugin "img2char" (qui transforme une image en code BASIC), en lui passant les paramètres qui suivent...
