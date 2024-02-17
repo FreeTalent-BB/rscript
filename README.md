@@ -76,7 +76,7 @@ REM Utilisation des variables RSCRIPT
 ```
 Ce code référence 2 variables "NOM_DU_JOUEUR1$", "PRENOM_DU_JOUEUR1$" qui sont utilisées dans notre code en les précédent de "!". Lors de la transpilation, RSCRIPT les renommera en quelque chose comme cela :
 ```basic
-!A$="Toto":!B$="Titi"
+A$="Toto":B$="Titi"
 ```
 
 Pour les constantes, le fonctionnement est similaire à l'exception que vous ne pourrez pas modifier leur valeur. Voici un exemple : 
