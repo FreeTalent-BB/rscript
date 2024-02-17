@@ -115,6 +115,46 @@ var Loader =
                     this.arrLabels[ name ] = this.numLine;
                     line = '';
                 }
+                
+                if( line.substring( 0, 8 ).toLowerCase() == "#plugin " )
+                {
+                    var part = line.split( " " );
+                    if( part.length < 3 )
+                    {
+                        console.log( 'ERROR: #plugin argument error.' );
+                        process.exit( 1 );                   
+                    }
+    
+                    if( !existsSync ('./plugins/' + part[ 1 ] + '.js' ) )
+                    {
+                        console.log( 'ERROR: Plugin "' + part[ 1 ] + '" not found.' );
+                        process.exit( 1 ); 				
+                    }
+    
+                    try
+                    {
+                        var { plugin } = require( './plugins/' + part[ 1 ] + '.js' );
+                    }
+                    catch( error )
+                    {
+                        console.log( 'ERROR: Loading error for plugin "' + part[ 1 ] + '".' );
+                        process.exit( 1 );				
+                    }
+    
+                    if( plugin )
+                    {
+                        var options = JSON.parse( '{' + part[ 2 ] + '}' );
+                        plugin( options, function( error )
+                        {
+                            if( error )
+                            {
+                                console.log( 'ERROR: "' + part[ 1 ] + ' plugin failed!' );
+                                process.exit( 1 );
+                            }
+                        } );					
+                    }
+                    line = "";
+                }
 
                 if( line.trim() != '' )
                 {

@@ -29,7 +29,7 @@ var tmxFile = "";
 var outputPath = ".";
 var maxData = 8;
 
-function plugin( options )
+function tmx2bas( options )
 {
 	tmxFile = options.source;
 	if( tmxFile == undefined )
@@ -39,7 +39,7 @@ function plugin( options )
 	
 	compression = (options.c)?options.c:"none";
 	formatData = (options.f)?options.f:"dec";
-	outputPath = (options.o)?options.o:"./output.bas";
+	outputPath = (options.o)?options.o:"./output.rscript";
 	rscriptLabels = (options.rl)?options.rl:"no";
 	maxData = (options.max)?(options.max):8;
 	return convertTMX();

@@ -120,7 +120,7 @@ function img2char( options, cb )
 	
 	n = (options.n!=undefined)?options.n:127;
 	c = (options.c!=undefined)?options.c:"#FFFFFF";
-	o = (options.o!=undefined)?options.o:"./output.bas";
+	o = (options.o!=undefined)?options.o:"./output.rscript";
 	s = (options.s!=undefined)?options.s:0;
 	m = (options.m!=undefined)?options.m:"cpc";
 	ns = (options.ns!=undefined)?options.ns:32;
@@ -128,7 +128,7 @@ function img2char( options, cb )
 	eteg= (options.eteg!=undefined)?options.eteg:"et";
 	convertIMG( cb );	
 }
-exports.img2char = img2char
+exports.plugin = img2char;
 
 var myArgs = [];
 if( PATH.basename( process.argv[ 1 ] ).toLowerCase() == 'img2char.js' )
