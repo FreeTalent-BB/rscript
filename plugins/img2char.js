@@ -15,7 +15,106 @@ var o = PATH.dirname( imgFile ) + '/output.bas';
 var cl = "no";
 var eteg = "et";
 
-function plugin( options, cb )
+var captureSettings = 
+{
+    'cpc':
+    {
+        width: 8,
+        height: 8,
+		hexa: true,
+        headerBASIC: 
+        [
+            'SYMBOL AFTER %NS-1',
+            'FOR I=0 TO %N-1',
+            'READ A$,B$,C$,D$,E$,F$,G$,H$',
+            'SYMBOL %NS+I,VAL("&"+A$),VAL("&"+B$),VAL("&"+C$),VAL("&"+D$),VAL("&"+E$),VAL("&"+F$),VAL("&"+G$),VAL("&"+H$)',
+            'NEXT I'
+        ],
+        dataBASIC: 'DATA %1,%2,%3,%4,%5,%6,%7,%8',
+        endBASIC: undefined
+    },
+
+    'thomson':
+    {
+        width: 8,
+        height: 8,
+		hexa: true,
+        headerBASIC: 
+        [
+            'CLEAR ,,%N',
+            'FOR I=0 TO %N-1',
+            'READ A$,B$,C$,D$,E$,F$,G$,H$',
+            'DEFGR$(%NS+I)=VAL("&H"+A$),VAL("&H"+B$),VAL("&H"+C$),VAL("&H"+D$),VAL("&H"+E$),VAL("&H"+F$),VAL("&H"+G$),VAL("&H"+H$)',
+            'NEXT I'
+        ],
+        dataBASIC: 'DATA %1,%2,%3,%4,%5,%6,%7,%8',
+        endBASIC: undefined
+    },
+
+    'vg5000':
+    {
+        width: 8,
+        height: 10,
+		hexa: true,
+        headerBASIC: undefined,
+        dataBASIC: 'SET%ETEG %NS,"%1%2%3%4%5%6%7%8%9%A"',
+        endBASIC: undefined
+    },
+	
+	'exelvision':
+	{
+        width: 8,
+        height: 10,
+		hexa: true,
+        headerBASIC: undefined,
+        dataBASIC: 'CALL CHAR( %NS,"%1%2%3%4%5%6%7%8%9%A" )',
+        endBASIC: undefined		
+	},
+
+	'alice':
+	{
+		width: 8,
+        height: 10,
+		hexa: false,
+        headerBASIC: 
+        [
+			/**
+			 * OLD VERSION
+			'RESTORE',
+			'FOR !for_var1=0 TO %N',
+			'READ !b,!c,!d,!e,!f,!g,!h,!i,!j,!k:POKE &r4,0',
+			'!a=192+!for_var1:POKE &r1,!b:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!c:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!d:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!e:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!f:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!g:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!h:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!i:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!j:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'!a=!a+4:POKE &r1,!k:POKE &r5,!a:POKE &r0exe,48+4:GOSUB @busy',
+			'NEXT !for_var1'
+			*/
+			'#label defchar',
+			'RESTORE:!tamp=0:!nchar=0',
+			'FOR !for_var1=0 TO %N-1',
+			'IF !nchar>3 THEN !tamp=!tamp+1',
+			'IF !nchar>3 THEN !nchar=0:GOSUB @inc_tamp',
+			'!a=(192+!nchar)-4',
+			'FOR !for_var2=1 TO 10:READ !b:!a=!a+4:POKE &r1,!b:POKE &r4,!tamp:POKE &r5,!a:POKE &re,48+4:GOSUB @busy:NEXT !for_var2',
+			'NEXT !for_var1',
+			'RETURN',		
+			'#label inc_tamp',
+			'!tamp=!tamp+1',
+			'IF !tamp>0 THEN !tamp=!tamp+7',
+			'RETURN'
+        ],
+        dataBASIC: 'DATA %1,%2,%3,%4,%5,%6,%7,%8,%9,%A',
+        endBASIC: undefined
+	}
+}
+
+function img2char( options, cb )
 {
 	imgFile = options.source;
 	
@@ -29,13 +128,13 @@ function plugin( options, cb )
 	eteg= (options.eteg!=undefined)?options.eteg:"et";
 	convertIMG( cb );	
 }
-exports.plugin = plugin
+exports.img2char = img2char
 
 var myArgs = [];
 if( PATH.basename( process.argv[ 1 ] ).toLowerCase() == 'img2char.js' )
 {
 
-	console.log( 'IMG2CHAR v1.0-2 by Baptiste Bideaux.' );
+	console.log( 'IMG2CHAR v1.0-4 by Baptiste Bideaux.' );
 	console.log( '------------------------------------' );
 	console.log( ' ' );
 	
@@ -95,10 +194,11 @@ if( PATH.basename( process.argv[ 1 ] ).toLowerCase() == 'img2char.js' )
 					switch( value.toLowerCase() )
 					{
 						case 'cpc':
-						case 'atarist':
 						case 'thomson':
 						case 'vg5000':
 						case 'c64':
+						case 'exelvision':
+						case 'alice':
 							m = value.toLowerCase();
 							break;
 					}
@@ -170,74 +270,12 @@ function checkParams()
 		return false;
 	}	
 	
-	if( m != 'cpc' && m != 'atarist' && m != 'thomson' && m != 'c64' && m != 'vg5000' )
+	if( captureSettings[ m ] == undefined)
 	{	
-		console.log( 'ERROR: Invalid value in "-m" argument. "CPC", "VG5000", "THOMSON" or "C64" waiting.' );
+		console.log( 'ERROR: Invalid value in "-m" argument. ' + m + ' machine not supported.' );
 		return false;
 	}
 	return true;
-}
-
-var captureSettings = 
-{
-    'cpc':
-    {
-        width: 8,
-        height: 8,
-        headerBASIC: 
-        [
-            'SYMBOL AFTER %NS-1',
-            'FOR I=0 TO %N-1',
-            'READ A$,B$,C$,D$,E$,F$,G$,H$',
-            'SYMBOL %NS+I,VAL("&"+A$),VAL("&"+B$),VAL("&"+C$),VAL("&"+D$),VAL("&"+E$),VAL("&"+F$),VAL("&"+G$),VAL("&"+H$)',
-            'NEXT I'
-        ],
-        dataBASIC: 'DATA %1,%2,%3,%4,%5,%6,%7,%8',
-        endBASIC: undefined
-    },
-
-    'atarist':
-    {
-        width: 8,
-        height: 8,
-        headerBASIC: undefined,
-        dataBASIC: undefined,
-        endBASIC: undefined
-    },
-
-    'thomson':
-    {
-        width: 8,
-        height: 8,
-        headerBASIC: 
-        [
-            'CLEAR ,,%N',
-            'FOR I=0 TO %N-1',
-            'READ A$,B$,C$,D$,E$,F$,G$,H$',
-            'DEFGR$(%NS+I)=VAL("&H"+A$),VAL("&H"+B$),VAL("&H"+C$),VAL("&H"+D$),VAL("&H"+E$),VAL("&H"+F$),VAL("&H"+G$),VAL("&H"+H$)',
-            'NEXT I'
-        ],
-        dataBASIC: 'DATA %1,%2,%3,%4,%5,%6,%7,%8',
-        endBASIC: undefined
-    },
-
-    'c64':
-    {
-        width: 8,
-        height: 8,
-        headerBASIC: undefined,
-        dataBASIC: undefined,
-        endBASIC: undefined
-    },
-
-    'vg5000':
-    {
-        width: 8,
-        height: 10,
-        headerBASIC: undefined,
-        dataBASIC: 'SET%ETEG %NS,"%1%2%3%4%5%6%7%8%9%A"',
-        endBASIC: undefined
-    }        
 }
 
 function convertIMG( cb )
@@ -249,8 +287,7 @@ function convertIMG( cb )
 	}
 
 	// WARNING: Canvas package for Node has been modified to callback
-	loadImage( imgFile, function( image ) 
-	{
+	loadImage(imgFile).then((image) =>	{
 		imgSource = image;
 		canvas = createCanvas( image.width, image.height );
 		ctx = canvas.getContext( '2d' );
@@ -263,14 +300,14 @@ function convertIMG( cb )
 function showHelp()
 {
     console.log( 'Syntax in command line:' );
-    console.log( 'img2char.js <imagefile> [-n=<number>] [ns=<number>] [-c=<color>] [-cl=<no|yes>] [-s=<number>] [-m=<cpc|thomson|atarist|c64|vg5000> ] [-o=<output path>]' );
+    console.log( 'img2char.js <imagefile> [-n=<number>] [ns=<number>] [-c=<color>] [-cl=<no|yes>] [-s=<number>] [-m=<cpc|thomson|atarist|c64|vg5000|exelvision> ] [-o=<output path>]' );
     console.log( ' imagefile: Absolute path of the image file.' );
     console.log( ' -n: The number of characters to capture ( 127 by default ).' );
     console.log( ' -ns: The index of the first user character ( 32 by default ).' );    
     console.log( ' -c: The HTML color to capture ( #FFFFFF by default ).' );
     console.log( ' -cl: Removes the characters definition in double. Must be "no" or "yes" ( "no" by default ).' );
     console.log( ' -s: Spacing between each character. (0 by default)' );
-    console.log( ' -m: Target machine. Must be CPC, VG5000, THOMSON or C64. (CPC by default)' );
+    console.log( ' -m: Target machine. Must be CPC, VG5000, EXELVISION, THOMSON or ALICE. (CPC by default)' );
     console.log( ' -o: Output path for the generated BASIC file. (directory of the imagefile by default)' );
 }
 
@@ -352,6 +389,10 @@ function captureProcess( cb )
                 {
                     hx = "0" + hx;
                 }
+				if( captureSettings[ m ].hexa == false )
+				{
+					var hx = parseInt( char[ l ],2 )
+				}
                 lineData = lineData.strReplace( nd[ l ], hx );
             }
 
@@ -375,7 +416,7 @@ function captureProcess( cb )
 				nchar++;
 				code = code + lineData;
 				
-				if( m == 'thomson' )
+				if( m == 'thomson' || m == 'exelvision' || m == 'alice')
 				{
 					sep = 3;
 				}
@@ -388,8 +429,9 @@ function captureProcess( cb )
 				if( sep > 2 )
 				{
 					sep = 0;
+					code = code + "\r\n";
 				}
-				code = code + "\r\n";
+				
 				
 				indexChar++;
 			}
