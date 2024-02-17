@@ -4,7 +4,7 @@ const LOADER = require( './loader.js' );
 const VERSION = '1.0.0';
 const showHelp = function()
 {
-    console.log( 'transpiler [-h] [-v] [-c yes|no|true|false] -m aquarius|cpc|thomson|exelvision -o output-file -s source' ); 
+    console.log( 'transpiler [-h] [-v] [-c yes|no|true|false] -m aquarius|cpc|thomson|exelvision|vg500|alice -o output-file -s source' ); 
     console.log( 'BASIC Transpiler commands line:' );
     console.log( '\t-h: Shows this help.' );
     console.log( '\t-v: Shows the Transpiler version.' );
