@@ -32,4 +32,3 @@
 #var tamp
 #var nchar
 
-END
