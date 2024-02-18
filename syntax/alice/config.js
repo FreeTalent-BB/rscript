@@ -50,7 +50,7 @@ var Config =
         'busy.bas',
         'locate.bas',
         'color.bas',
-        'userhar.bas',
+        'userchar.bas',
     ],
 
     // Compress method

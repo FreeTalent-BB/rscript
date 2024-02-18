@@ -175,8 +175,8 @@ if( options.executeBefore && options.executeBefore.trim() != '' )
             return;
         }
 
-        LOADER.load( Config, options.sourcePath, options );
         LOADER.insertAutoIncludes( Config );
+        LOADER.load( Config, options.sourcePath, options );
         transpile();
         LOADER.replaceTagsByValues( Config, options );
         FS.writeFileSync( options.outputPath, LOADER.code.join('\r\n' ) );
@@ -185,8 +185,8 @@ if( options.executeBefore && options.executeBefore.trim() != '' )
 }
 else
 {
-    LOADER.load( Config, options.sourcePath, options );
     LOADER.insertAutoIncludes( Config );
+    LOADER.load( Config, options.sourcePath, options );
     transpile();
     LOADER.replaceTagsByValues( Config, options );
     FS.writeFileSync( options.outputPath, LOADER.code.join('\r\n' ) );
