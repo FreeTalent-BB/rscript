@@ -32,3 +32,4 @@
 #var tamp
 #var nchar
 
+GOTO @main

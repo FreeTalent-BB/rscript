@@ -1,3 +1,3 @@
 #label locate
-    If !line>0 THEN !line=!line+7
-    POKE &r6,!line:POKE &r7,!col:RETURN
+    IF !line>0 THEN !line=!line+7
+    POKE &r6,!col:POKE &r7,!line:RETURN
