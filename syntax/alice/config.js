@@ -59,17 +59,6 @@ var Config =
         var newLine = '';
         var numLine = line.substring( 0, line.indexOf( " ") ).trim();
         line = line.substring( line.indexOf( ' ' ), line.length ).trim(); 
-        line = line.strReplace( 'print', '?' );
-        line = line.strReplace( 'PRINT', '?' );
-        line = line.strReplace( 'Print', '?' );
-        line = line.strReplace( 'then goto', 'then' );
-        line = line.strReplace( 'then GOTO', 'then' );
-        line = line.strReplace( 'THEN goto', 'then' );
-        line = line.strReplace( 'THEN GOTO', 'then' );
-        line = line.strReplace( 'Then goto', 'then' );
-        line = line.strReplace( 'Then Goto', 'then' );
-        line = line.strReplace( 'then Goto', 'then' );
-        line = line.strReplace( 'THEN Goto', 'then' );
         //line = line.strReplace( ' ','' );
         line = line.strReplace( '\\s',' ' );
         return numLine + ' ' + line;

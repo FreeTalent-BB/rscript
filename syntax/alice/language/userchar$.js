@@ -21,7 +21,6 @@ var TOKEN =
             }
 
             var args = parts[ 1 ].trim().split( ',' );
-            console.log( args );
             if( args )
             {
                 if( args.length != 2 )

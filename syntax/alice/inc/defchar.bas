@@ -4,6 +4,7 @@
         IF !nchar>3 THEN GOSUB @inc_tamp
         !a=192+!nchar
         FOR !for_var2=1 TO 10:READ !b:POKE &r1,!b:POKE &r4,!tamp:POKE &r5,!a:POKE &re,52:GOSUB @busy:!a=!a+4:NEXT !for_var2
+        !nchar=!nchar+1
     NEXT !for_var1
     RETURN
 
