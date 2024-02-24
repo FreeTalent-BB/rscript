@@ -46,6 +46,7 @@ var Config =
     includes: 
     [
         'vars.bas',
+        'screenclear.bas',
         'defchar.bas',
         'busy.bas',
         'locate.bas',
