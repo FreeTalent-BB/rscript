@@ -29,7 +29,11 @@
 #var i
 #var j
 #var k
+#var x
+#var y
+
 #var tamp
 #var nchar
+#var sprite
 
 GOTO @main

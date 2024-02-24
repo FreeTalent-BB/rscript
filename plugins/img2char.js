@@ -76,6 +76,7 @@ var captureSettings =
 		width: 8,
         height: 10,
 		hexa: false,
+		mirror: true, 
         headerBASIC: 
         [
 			/**
@@ -331,11 +332,25 @@ function captureProcess( cb )
         var hex = '#' + rgbToHex( col[ 0 ], col[ 1 ], col[ 2 ] );
         if( hex.toLowerCase() == c.toLowerCase() )
         {
-            line += '1';
+			if( captureSettings[ m ].mirror )
+			{
+				line = '1' + line;
+			}
+			else
+			{
+            	line += '1';
+			}
         }
         else
         {
-            line += '0';
+			if( captureSettings[ m ].mirror )
+			{
+				line = '0' + line;
+			}
+			else
+			{
+            	line += '0';
+			}
         }
         x++;
 

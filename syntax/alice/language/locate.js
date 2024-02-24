@@ -55,7 +55,7 @@ var TOKEN =
                     }
                 } 
 
-                code = '!line=' + args[ 0 ].trim() + ':!col=' + args[ 1 ].trim() + ':GOSUB @locate';
+                code = '!line=' + args[ 1 ].trim() + ':!col=' + args[ 0 ].trim() + ':GOSUB @locate';
             }
         }
         return code;

@@ -124,8 +124,8 @@ var Loader =
                         console.log( 'ERROR: #plugin argument error.' );
                         process.exit( 1 );                   
                     }
-    
-                    if( !existsSync ('./plugins/' + part[ 1 ] + '.js' ) )
+                    console.log( __dirname + '/plugins/' + part[ 1 ] + '.js');
+                    if( !FS.existsSync( __dirname + '/plugins/' + part[ 1 ] + '.js' ) )
                     {
                         console.log( 'ERROR: Plugin "' + part[ 1 ] + '" not found.' );
                         process.exit( 1 ); 				
@@ -133,17 +133,28 @@ var Loader =
     
                     try
                     {
-                        var { plugin } = require( './plugins/' + part[ 1 ] + '.js' );
+                        var { plugin } = require( __dirname + '/plugins/' + part[ 1 ] + '.js' );
                     }
                     catch( error )
                     {
+                        console.log( error);
                         console.log( 'ERROR: Loading error for plugin "' + part[ 1 ] + '".' );
                         process.exit( 1 );				
                     }
     
                     if( plugin )
                     {
-                        var options = JSON.parse( '{' + part[ 2 ] + '}' );
+                        var options = {};
+                        for( var p = 0; p < part.length; p++ )
+                        {
+                            part[ p ] = part[ p ].trim();
+                            var data = part[p].split( '=' );
+                            if( data.length == 2 )
+                            {
+                                options[ data[ 0 ] ] = data[1];
+                            }
+                        }
+                        
                         plugin( options, function( error )
                         {
                             if( error )
